@@ -1,13 +1,14 @@
 #include <stdio.h>
 
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length);
+void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length);
 void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
 
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length)
 {
-    unsigned int i;
+    unsigned int iterator;
 
-    for (i = 0; i < length; i++)
+    for (iterator = 0; iterator < length; iterator++)
     {
         switch (*hex_symbs)
         {
@@ -121,6 +122,8 @@ void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned in
                 *dec_symbs = 15;
                 break;                
             }
+            default:
+                break;
         }
 
         hex_symbs--;
@@ -128,14 +131,112 @@ void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned in
     }
 }
 
+void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length)
+{
+    unsigned int iterator;
+    
+    for (iterator = 0; iterator < (length + 1); iterator++)
+    {
+        switch (*dec_symbs)
+        {
+            case 0:
+            {
+                *hex_symbs = '0';
+                break;                
+            }
+            case 1:
+            {
+                *hex_symbs = '1';
+                break;                
+            }
+            case 2:
+            {
+                *hex_symbs = '2';
+                break;                
+            }
+            case 3:
+            {
+                *hex_symbs = '3';
+                break;                
+            }
+            case 4:
+            {
+                *hex_symbs = '4';
+                break;                
+            }
+            case 5:
+            {
+                *hex_symbs = '5';
+                break;                
+            }
+            case 6:
+            {
+                *hex_symbs = '6';
+                break;                
+            }
+            case 7:
+            {
+                *hex_symbs = '7';
+                break;                
+            }
+            case 8:
+            {
+                *hex_symbs = '8';
+                break;                
+            }
+            case 9:
+            {
+                *hex_symbs = '9';
+                break;                
+            }
+            case 10:
+            {
+                *hex_symbs = 'A';
+                break;
+            }
+            case 11:
+            {
+                *hex_symbs = 'B';
+                break;
+            }
+            case 12:
+            {
+                *hex_symbs = 'C';
+                break;
+            }
+            case 13:
+            {
+                *hex_symbs = 'D';
+                break;
+            }
+            case 14:
+            {
+                *hex_symbs = 'E';
+                break;
+            }
+            case 15:
+            {
+                *hex_symbs = 'F';
+                break;
+            }
+            default:
+                break;
+        }
+
+        dec_symbs++;
+        hex_symbs--;
+    }
+}
+
 void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
 {
     unsigned int iterator = 0, carry = 0;
-    for (iterator = 0; iterator < length; iterator++)
+    for (iterator = 0; iterator < (length + 1); iterator++)
     {
-        if (iterator >= length)
+        if (iterator == length)
         {
             *res = carry;
+            printf("\nFinal *res is %d", *res);
             break;
         }
         else
@@ -143,6 +244,7 @@ void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, 
             *res = (*num1 + *num2 + carry) % 16;
             carry = ((*num1 + *num2 + carry) >= 16);
         }
+
         num1++;
         num2++;
         res++;
