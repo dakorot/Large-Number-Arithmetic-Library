@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "funclab01.h"
 
-#define MAX_int 9
-#define MAX_char 7 //the biggest 32-bit sized number is FFFFFFFF = 4294967295 which makes 10 int characters MAX or 8 hex 
+#define MAX_int 1024
+#define MAX_char 512 //the biggest 32-bit sized number is FFFFFFFF = 4294967295 which makes 10 int characters MAX or 8 hex 
 
 int main(void)
 {
@@ -57,7 +57,7 @@ int main(void)
 
     puts("\nResult in hex form:\n");
     for(j = 0; j < num_of_symbs+1; j++)
-        printf("%c  ", *p_hex_result++);
+        printf("%c", *p_hex_result++);
     
     system("PAUSE");
     return 0;
