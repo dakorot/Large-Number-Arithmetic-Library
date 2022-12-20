@@ -3,7 +3,7 @@
 #include "funclab01.h"
 
 #define MAX_int 1024
-#define MAX_char 512 //the biggest 32-bit sized number is FFFFFFFF = 4294967295 which makes 10 int characters MAX or 8 hex 
+#define MAX_char 512
 
 int main(void)
 {
@@ -39,7 +39,7 @@ int main(void)
     hex_to_int_conversion(p_hex_num_1, p_number_1, num_of_symbs);
     hex_to_int_conversion(p_hex_num_2, p_number_2, num_of_symbs);
 
-    p_number_1 = number_1;
+/*     p_number_1 = number_1;
     p_number_2 = number_2;
     addition_of_two(p_number_1, p_number_2, p_result, num_of_symbs);
 
@@ -57,8 +57,27 @@ int main(void)
 
     puts("\nResult in hex form:\n");
     for(j = 0; j < num_of_symbs+1; j++)
-        printf("%c", *p_hex_result++);
+            printf("%c", *p_hex_result++); */
+
+    p_number_1 = number_1;
+    p_number_2 = number_2;
+    subtraction_of_two(p_number_1, p_number_2, p_result, num_of_symbs);
     
+    p_result = result;
+    p_hex_result = hex_result + num_of_symbs;
+    int_to_hex_conversion(p_result, p_hex_result, num_of_symbs);
+
+    p_result = result;
+    p_hex_result = hex_result;
+
+    puts("\n\nResult in int form:\n");
+    for (j = 0; j < num_of_symbs+1; j++)
+        printf("%d  ", *p_result++);    
+
+    puts("\nResult in hex form:\n");
+    for(j = 0; j < num_of_symbs+1; j++)
+            printf("%c", *p_hex_result++);
+
     system("PAUSE");
     return 0;
 }

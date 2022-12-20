@@ -3,6 +3,7 @@
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length);
 void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length);
 void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
+void subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
 
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length)
 {
@@ -236,7 +237,6 @@ void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, 
         if (iterator == length)
         {
             *res = carry;
-            printf("\nFinal *res is %d", *res);
             break;
         }
         else
@@ -245,6 +245,25 @@ void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, 
             carry = ((*num1 + *num2 + carry) >= 16);
         }
 
+        num1++;
+        num2++;
+        res++;
+    }
+}
+
+void subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
+{
+    unsigned int iterator = 0, carry = 0;
+    for (iterator = 0; iterator < length; iterator++)
+    {
+        if (iterator == length)
+            break;
+        else
+        {
+            *res = (*num1 - *num2 + carry) % 16;
+            carry = (*num1 - *num2 + carry) / 16;
+            printf("\nRes[%d]'s carry is %d.", iterator, carry);
+        }
         num1++;
         num2++;
         res++;
