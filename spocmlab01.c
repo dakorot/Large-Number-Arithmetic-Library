@@ -70,6 +70,7 @@ int main(void)
     p_result = result;
     p_hex_result = hex_result;
 
+    int j;
     puts("\n\nResult in int form:\n");
     for (j = 0; j < num_of_symbs+1; j++)
         printf("%d  ", *p_result++);    

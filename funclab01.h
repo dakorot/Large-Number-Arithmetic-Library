@@ -3,7 +3,8 @@
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length);
 void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length);
 void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
-void subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
+void comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
+unsigned int subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
 
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length)
 {
@@ -251,21 +252,34 @@ void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, 
     }
 }
 
-void subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
+unsigned int subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
 {
-    unsigned int iterator = 0, carry = 0;
+    unsigned int iterator = 0, borrow = 0;
     for (iterator = 0; iterator < length; iterator++)
     {
         if (iterator == length)
             break;
         else
         {
-            *res = (*num1 - *num2 + carry) % 16;
-            carry = (*num1 - *num2 + carry) / 16;
-            printf("\nRes[%d]'s carry is %d.", iterator, carry);
+            *res = (*num1 - *num2 + borrow) % 16;
+            borrow = (*num1 - *num2 + borrow) / 16;
+            printf("\nRes[%d]'s borrow is %d.", iterator, borrow);
         }
         num1++;
         num2++;
         res++;
     }
+
+    if (borrow == 0)
+        return 0;
+    else if (borrow == 1)
+        return 1;
+    else if (borrow == -1)
+        return -1;
+}
+
+void comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
+{
+    unsigned int iterator = length - 1;
+    
 }
