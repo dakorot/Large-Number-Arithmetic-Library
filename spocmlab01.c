@@ -7,13 +7,14 @@
 
 int main(void)
 {
-    unsigned int number_1[MAX_int], number_2[MAX_int], result[MAX_int+1], *p_number_1, *p_number_2, *p_result, num_of_symbs = 0;
+    unsigned int number_1[MAX_int], number_2[MAX_int], result[MAX_int+1], *p_number_1, *p_number_2, *p_result, num_of_symbs = 0, sign_for_subtr, *p_sign_for_subtr;
     char hex_num_1[MAX_char], hex_num_2[MAX_char], hex_result[MAX_char+1], *p_hex_num_1, *p_hex_num_2, *p_hex_result, ch;
     p_hex_num_1 = hex_num_1;
     p_hex_num_2 = hex_num_2;
     p_number_1 = number_1;
     p_number_2 = number_2;
     p_result = result;
+    p_sign_for_subtr = &sign_for_subtr;
 
     puts("\nPlease, type in the first number in hexadecimal form below:\n");
     while ((ch = getchar()) != '\n' && num_of_symbs < (MAX_char + 1))
@@ -23,8 +24,6 @@ int main(void)
         num_of_symbs++;
     }
     p_hex_num_1--;
-
-    //so far testing for two numbers with the same length
     num_of_symbs = 0;
 
     puts("\n\nPlease, type in the second number in hexadecimal form below:\n");
@@ -39,29 +38,9 @@ int main(void)
     hex_to_int_conversion(p_hex_num_1, p_number_1, num_of_symbs);
     hex_to_int_conversion(p_hex_num_2, p_number_2, num_of_symbs);
 
-/*     p_number_1 = number_1;
-    p_number_2 = number_2;
-    addition_of_two(p_number_1, p_number_2, p_result, num_of_symbs);
-
-    p_result = result;
-    p_hex_result = hex_result + num_of_symbs;
-    int_to_hex_conversion(p_result, p_hex_result, num_of_symbs+1);
-  
-    p_result = result;
-    p_hex_result = hex_result;
-
-    int j;
-    puts("\n\nResult in int form:\n");
-    for (j = 0; j < num_of_symbs+1; j++)
-        printf("%d  ", *p_result++);    
-
-    puts("\nResult in hex form:\n");
-    for(j = 0; j < num_of_symbs+1; j++)
-            printf("%c", *p_hex_result++); */
-
     p_number_1 = number_1;
     p_number_2 = number_2;
-    subtraction_of_two(p_number_1, p_number_2, p_result, num_of_symbs);
+    subtraction_of_two(p_number_1, p_number_2, p_result, num_of_symbs/* , p_sign_for_subtr */);
     
     p_result = result;
     p_hex_result = hex_result + num_of_symbs;
@@ -70,14 +49,20 @@ int main(void)
     p_result = result;
     p_hex_result = hex_result;
 
-    int j;
+    /* int j;
     puts("\n\nResult in int form:\n");
     for (j = 0; j < num_of_symbs+1; j++)
-        printf("%d  ", *p_result++);    
+        printf("%d  ", *p_result++);  */   
 
+    int j;
+    char sign;
     puts("\nResult in hex form:\n");
+    if ((sign = comparison_of_two(p_number_1, p_number_2, num_of_symbs)) == -1)
+        puts("-");
     for(j = 0; j < num_of_symbs+1; j++)
-            printf("%c", *p_hex_result++);
+    { 
+        printf("%c", *p_hex_result++);
+    }
 
     system("PAUSE");
     return 0;

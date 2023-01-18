@@ -1,10 +1,11 @@
 #include <stdio.h>
+#include <math.h>
 
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length);
 void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length);
 void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
-void comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
-unsigned int subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
+int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
+void subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
 
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length)
 {
@@ -139,6 +140,8 @@ void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned in
     
     for (iterator = 0; iterator < (length + 1); iterator++)
     {
+        if ((iterator == length) && (*dec_symbs == 0))
+            break;
         switch (*dec_symbs)
         {
             case 0:
@@ -252,34 +255,47 @@ void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, 
     }
 }
 
-unsigned int subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
+void subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
 {
-    unsigned int iterator = 0, borrow = 0;
+    unsigned int iterator = 0;
+    int borrow = 0, temp;
     for (iterator = 0; iterator < length; iterator++)
     {
-        if (iterator == length)
-            break;
+        if (iterator == length)      
+                break;
         else
         {
-            *res = (*num1 - *num2 + borrow) % 16;
-            borrow = (*num1 - *num2 + borrow) / 16;
-            printf("\nRes[%d]'s borrow is %d.", iterator, borrow);
+            temp = (*num1 - *num2 - borrow);
+            if (temp >= 0)
+            {
+               *res = temp;
+               borrow = 0;
+
+            }
+            else
+            {
+                *res = temp + 16;
+                borrow = 1;
+            }
         }
         num1++;
         num2++;
         res++;
     }
-
-    if (borrow == 0)
-        return 0;
-    else if (borrow == 1)
-        return 1;
-    else if (borrow == -1)
-        return -1;
 }
 
-void comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
+int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
     unsigned int iterator = length - 1;
-    
+    while (*num1 == *num2)
+    {
+        iterator = iterator--;
+
+        if (iterator == -1) //numbers are equal
+            return 0;
+        else if (*num1 > *num2)
+            return 1;
+        else
+            return -1;
+    }
 }
