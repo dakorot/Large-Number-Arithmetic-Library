@@ -9,7 +9,7 @@
       "stopAtEntry": false,
       "externalConsole": true,
       "cwd": "c:/Users/dorat/Documents/Prog/SPoCM_lab01/Koropenko_FI-04_lab1",
-      "program": "C:/Users/dorat/Documents/Prog/SPoCM_lab01/Koropenko_FI-04_lab1/spocmlab01.exe",
+      "program": "c:/Users/dorat/Documents/Prog/SPoCM_lab01/Koropenko_FI-04_lab1/spocmlab01.exe",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

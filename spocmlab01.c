@@ -7,14 +7,13 @@
 
 int main(void)
 {
-    unsigned int number_1[MAX_int], number_2[MAX_int], result[MAX_int+1], *p_number_1, *p_number_2, *p_result, num_of_symbs = 0, sign_for_subtr, *p_sign_for_subtr;
+    unsigned int number_1[MAX_int], number_2[MAX_int], result[MAX_int*2], *p_number_1, *p_number_2, *p_result, num_of_symbs = 0;
     char hex_num_1[MAX_char], hex_num_2[MAX_char], hex_result[MAX_char+1], *p_hex_num_1, *p_hex_num_2, *p_hex_result, ch;
     p_hex_num_1 = hex_num_1;
     p_hex_num_2 = hex_num_2;
     p_number_1 = number_1;
     p_number_2 = number_2;
     p_result = result;
-    p_sign_for_subtr = &sign_for_subtr;
 
     puts("\nPlease, type in the first number in hexadecimal form below:\n");
     while ((ch = getchar()) != '\n' && num_of_symbs < (MAX_char + 1))
@@ -40,7 +39,8 @@ int main(void)
 
     p_number_1 = number_1;
     p_number_2 = number_2;
-    subtraction_of_two(p_number_1, p_number_2, p_result, num_of_symbs/* , p_sign_for_subtr */);
+
+    multiplication_of_two(p_number_1, p_number_2, p_result, num_of_symbs);
     
     p_result = result;
     p_hex_result = hex_result + num_of_symbs;
@@ -63,6 +63,7 @@ int main(void)
     { 
         printf("%c", *p_hex_result++);
     }
+    puts("\n");
 
     system("PAUSE");
     return 0;
