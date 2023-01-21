@@ -8,7 +8,7 @@
 int main(void)
 {
     unsigned int number_1[MAX_int], number_2[MAX_int], result[MAX_int*2], *p_number_1, *p_number_2, *p_result, num_of_symbs = 0;
-    char hex_num_1[MAX_char], hex_num_2[MAX_char], hex_result[MAX_char+1], *p_hex_num_1, *p_hex_num_2, *p_hex_result, ch;
+    char hex_num_1[MAX_char], hex_num_2[MAX_char], hex_result[MAX_char*2], *p_hex_num_1, *p_hex_num_2, *p_hex_result, ch;
     p_hex_num_1 = hex_num_1;
     p_hex_num_2 = hex_num_2;
     p_number_1 = number_1;
@@ -43,23 +43,19 @@ int main(void)
     multiplication_of_two(p_number_1, p_number_2, p_result, num_of_symbs);
     
     p_result = result;
-    p_hex_result = hex_result + num_of_symbs;
-    int_to_hex_conversion(p_result, p_hex_result, num_of_symbs);
+    p_hex_result = hex_result + num_of_symbs*2;
+    int_to_hex_conversion(p_result, p_hex_result, num_of_symbs*2);
 
     p_result = result;
     p_hex_result = hex_result;
 
-    /* int j;
-    puts("\n\nResult in int form:\n");
-    for (j = 0; j < num_of_symbs+1; j++)
-        printf("%d  ", *p_result++);  */   
-
     int j;
-    char sign;
-    puts("\nResult in hex form:\n");
-    if ((sign = comparison_of_two(p_number_1, p_number_2, num_of_symbs)) == -1)
-        puts("-");
-    for(j = 0; j < num_of_symbs+1; j++)
+    puts("\n\nResult in int form:\n");
+    for (j = 0; j < num_of_symbs*2; j++)
+        printf("%d  ", *p_result++);    
+ 
+    puts("\n\nResult in hex form:\n");
+    for(j = 0; j < num_of_symbs*2; j++)
     { 
         printf("%c", *p_hex_result++);
     }

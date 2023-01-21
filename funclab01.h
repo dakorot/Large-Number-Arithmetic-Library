@@ -251,7 +251,7 @@ void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, 
         else
         {
             *res = (*num1 + *num2 + carry) % 16;
-            carry = ((*num1 + *num2 + carry) >= 16);
+            carry = ((*num1 + *num2 + carry) >= 16); 
         }
 
         num1++;
@@ -318,13 +318,8 @@ void multiplication_by_digit(unsigned int *num1, int *digit, unsigned int *res, 
         else
         {
         temp = (*num1) * (*digit) + carry;
-        printf("\n#%u: temp = %u * %u + %u = %u", iterator, *num1, *digit, carry, temp);
         *res = temp % 16;
-        printf("\n#%u: *res = %u %% 16 = %u", iterator, temp, *res);
-        carry = temp / 16;
-        printf("\n#%u: carry = %u / 16 = %u", iterator, temp, carry);
-
-        printf ("\nBy digit #%u: %u", iterator, *res);
+        carry = temp / 16;;
 
         num1++;
         res++;
@@ -334,61 +329,36 @@ void multiplication_by_digit(unsigned int *num1, int *digit, unsigned int *res, 
 
 void multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
 {
-    unsigned int iterator, temp[MAX_int*2], *p_temp, carry = 0, *p_res_orig, *p_res_temp, *p_num1, *p_num2;
-    p_temp = temp;
-    p_res_orig = res;
-    p_res_temp = res;
+    unsigned int iterator_1, iterator_2, temp, temp_res[MAX_int*2], *p_temp_res, *p_res, *p_num1, *p_num2;
+    p_temp_res = temp_res;
     p_num1 = num1;
     p_num2 = num2;
+    p_res = res;
 
-    for (iterator = 0; iterator < (length + 1); iterator++) //let every digital of the resulting number be zero for further addition of sub-results
+    for (iterator_1 = 0; iterator_1 < length*2; iterator_1++)
     {
-        *p_res_orig = 0;
-        p_res_orig++;
+        *p_res = 0;
+        p_res++;
     }
-    
-    p_res_orig = res;
+    p_res = res;
 
-    for (iterator = 0; iterator < length; iterator++)
+    for (iterator_2 = 0; iterator_2 < length; iterator_2++)
     {
-        multiplication_by_digit(p_num1, p_num2, p_temp, length);
-
-        p_temp = temp;
-        printf("\nResult of multiplication by digit #%u: ", iterator);
-        for (int i = 0; i < (length + 1); i++)
-            printf("%u", *p_temp++);
-
-        p_temp = temp;
-
-        addition_of_two(p_temp, p_res_temp, p_res_orig, length);
-
-        p_temp = temp; 
-        p_res_orig = res;
-        p_res_temp = res + iterator + 1;
-        p_num1 = num1;
-        p_num2 = num2 + iterator + 1;                 
-    }
-       
-}
-
-/*
-i = 0, carry = 0;
-for (i = 0; i < length; i++)
-{
-     if ((*num1 == 0) || (*num2 == 0))
-    {
-        *res = 0;
-        continue;
-    }
-    else
-    {
-        temp = (*num1) * (*num2) + carry;
-        *res = temp % 16;
-        carry = floor(temp / 16);
-    }
-    num1++;
-    num2++;
-    res++;
+        for (iterator_1 = 0; iterator_1 < length; iterator_1++)
+        {
+            p_res = res + iterator_1 + iterator_2;
+            p_num1 = num1 + iterator_1;
+            p_num2 = num2 + iterator_2;
+            *p_res = *p_res + (*p_num1) * (*p_num2);
+        }
+        
+        p_res = res;
+        for (iterator_1 = 0; iterator_1 < length*2; iterator_1++)
+        {
+            temp = *p_res / 16;
+            *p_res = *p_res % 16;
+            p_res = p_res + 1;
+            *p_res = *p_res + temp;
+        }
     }
 }
-*/
