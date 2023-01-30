@@ -1,66 +1,51 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "funclab01.h"
 
-#define MAX_int 1024
-#define MAX_char 512
+#define MAX 256
 
 int main(void)
 {
-    unsigned int number_1[MAX_int], number_2[MAX_int], result[MAX_int*2], *p_number_1, *p_number_2, *p_result, num_of_symbs = 0;
-    char hex_num_1[MAX_char], hex_num_2[MAX_char], hex_result[MAX_char*2], *p_hex_num_1, *p_hex_num_2, *p_hex_result, ch;
-    p_hex_num_1 = hex_num_1;
-    p_hex_num_2 = hex_num_2;
+    unsigned int number_1[MAX], number_2[MAX], number_3[MAX], result_add[MAX+1], result_sub[MAX], result_mul[MAX*2], *p_number_1, *p_number_2, *p_number_3, *p_result_add, *p_result_sub, *p_result_mul;
+    char hex_num_3[MAX], hex_result_add[MAX+1], hex_result_sub[MAX], hex_result_mul[MAX*2], *p_hex_num_1, *p_hex_num_2, *p_hex_num_3, *p_hex_result_add, *p_hex_result_sub, *p_hex_result_mul;
+    p_hex_num_3 = hex_num_3;
     p_number_1 = number_1;
     p_number_2 = number_2;
-    p_result = result;
+    p_number_3 = number_3;
+    p_result_add = result_add;
+    p_result_sub = result_sub;
+    p_result_mul = result_mul;
+  
+    char hex_num_1[MAX] = "D4D2110984907B5625309D956521BAB4157B8B1ECE04043249A3D379AC112E5B9AF44E721E148D88A942744CF56A06B92D28A0DB950FE4CED2B41A0BD38BCE7D0BE1055CF5DE38F2A588C2C9A79A75011058C320A7B661C6CE1C36C7D870758307E5D2CF07D9B6E8D529779B6B2910DD17B6766A7EFEE215A98CAC300F2827DB";
+    p_hex_num_1 = hex_num_1 + MAX - 1;
+    char hex_num_2[MAX] = "3A7EF2554E8940FA9B93B2A5E822CC7BB262F4A14159E4318CAE3ABF5AEB1022EC6D01DEFAB48B528868679D649B445A753684C13F6C3ADBAB059D635A2882090FC166EA9F0AAACD16A062149E4A0952F7FAAB14A0E9D3CB0BE9200DBD3B0342496421826919148E617AF1DB66978B1FCD28F8408506B79979CCBCC7F7E5FDE7";
+    p_hex_num_2 = hex_num_2 + MAX - 1;
 
-    puts("\nPlease, type in the first number in hexadecimal form below:\n");
-    while ((ch = getchar()) != '\n' && num_of_symbs < (MAX_char + 1))
-    {
-        *p_hex_num_1 = ch;
-        *p_hex_num_1++;
-        num_of_symbs++;
-    }
-    p_hex_num_1--;
-    num_of_symbs = 0;
+    clock_t start, end;
+    double execution_time;
+    start = clock();
+    hex_to_int_conversion(p_hex_num_1, p_number_1, MAX);
+    //hex_to_int_conversion(p_hex_num_2, p_number_2, MAX);
 
-    puts("\n\nPlease, type in the second number in hexadecimal form below:\n");
-    while ((ch = getchar()) != '\n' && num_of_symbs < (MAX_char + 1))
-    {
-        *p_hex_num_2 = ch;
-        *p_hex_num_2++;
-        num_of_symbs++;
-    }
-    p_hex_num_2--;
-
-    hex_to_int_conversion(p_hex_num_1, p_number_1, num_of_symbs);
-    hex_to_int_conversion(p_hex_num_2, p_number_2, num_of_symbs);
-
+    //====step 3.1: multiplication (a * digit)
     p_number_1 = number_1;
-    p_number_2 = number_2;
-
-    multiplication_of_two(p_number_1, p_number_2, p_result, num_of_symbs);
-    
-    p_result = result;
-    p_hex_result = hex_result + num_of_symbs*2;
-    int_to_hex_conversion(p_result, p_hex_result, num_of_symbs*2);
-
-    p_result = result;
-    p_hex_result = hex_result;
-
+    unsigned int digit = 2, *p_digit;
+    p_digit = &digit;
+    p_hex_result_mul = hex_result_mul + MAX*2 - 1;
+    int_to_hex_conversion(multiplication_by_digit(p_number_1, p_digit, MAX), p_hex_result_mul, MAX*2);
+    p_hex_result_mul = hex_result_mul;
     int j;
-    puts("\n\nResult in int form:\n");
-    for (j = 0; j < num_of_symbs*2; j++)
-        printf("%d  ", *p_result++);    
- 
-    puts("\n\nResult in hex form:\n");
-    for(j = 0; j < num_of_symbs*2; j++)
+    puts("\n\nResult of multiplication in hex form:\n");
+    for(j = 0; j < MAX*2; j++)
     { 
-        printf("%c", *p_hex_result++);
+        printf("%c", *p_hex_result_mul++);
     }
     puts("\n");
 
+    end = clock();
+    execution_time = ((double)(end - start))/CLOCKS_PER_SEC;
+    printf("\nExecution time: %f s.\n", execution_time);
     system("PAUSE");
     return 0;
 }

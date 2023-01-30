@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <math.h>
 
-#define MAX_int 1024
-#define MAX_char 512
+#define MAX 256
 
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length);
 void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length);
-void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
+unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
-void subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
-void multiplication_by_digit(unsigned int *num1, int *num3, unsigned int *res, unsigned int length);
-void multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
+unsigned int* subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
+unsigned int* multiplication_by_digit(unsigned int *num1, int *num3, unsigned int length);
+unsigned int* multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
+void division_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
+void barrett_reduction(unsigned int *num, unsigned int *module, unsigned int length_of_num, unsigned int length_of_mod);
 
 void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length)
 {
@@ -238,101 +239,122 @@ void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned in
     }
 }
 
-void addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
+unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
     unsigned int iterator = 0, carry = 0;
+    static unsigned int res[MAX], *p_res;
+    p_res = res;
+
     for (iterator = 0; iterator < (length + 1); iterator++)
     {
         if (iterator == length)
         {
-            *res = carry;
+            *p_res = carry;
             break;
         }
         else
         {
-            *res = (*num1 + *num2 + carry) % 16;
+            *p_res = (*num1 + *num2 + carry) % 16;
             carry = ((*num1 + *num2 + carry) >= 16); 
         }
 
         num1++;
         num2++;
-        res++;
+        p_res++;
     }
+
+    return res;
 }
 
-void subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
+unsigned int* subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
     unsigned int iterator = 0;
+    static unsigned int res[MAX], *p_res;
+    p_res = res;
     int borrow = 0, temp;
+
     for (iterator = 0; iterator < length; iterator++)
     {
-        if (iterator == length)      
-                break;
+        if (iterator == length)
+        {
+            //*p_res = temp; 
+            break;
+        }  
+                
         else
         {
             temp = (*num1 - *num2 - borrow);
             if (temp >= 0)
             {
-               *res = temp;
+               *p_res = temp;
                borrow = 0;
 
             }
             else
             {
-                *res = temp + 16;
+                *p_res = temp + 16;
                 borrow = 1;
             }
         }
         num1++;
         num2++;
-        res++;
+        p_res++;
     }
+
+    return res;
 }
 
 int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
-    unsigned int iterator = length - 1;
-    while (*num1 == *num2)
+    unsigned int iterator;
+    for (iterator = length; iterator > 0; iterator++)
     {
-        iterator = iterator--;
-
         if (iterator == -1) //numbers are equal
             return 0;
         else if (*num1 > *num2)
             return 1;
         else
             return -1;
+
+        iterator--;
+        num1--;
+        num2--;
     }
 }
 
-void multiplication_by_digit(unsigned int *num1, int *digit, unsigned int *res, unsigned int length)
+unsigned int* multiplication_by_digit(unsigned int *num1, int *digit, unsigned int length)
 {
     unsigned int iterator, carry = 0, temp;
+    static unsigned int res[MAX*2], *p_res;
+    p_res = res;
     for (iterator = 0; iterator < length; iterator++)
     {
         if (iterator == length)
         {
-            *res = carry;
+            *p_res = carry;
             break;
         }
         else
         {
         temp = (*num1) * (*digit) + carry;
-        *res = temp % 16;
-        carry = temp / 16;;
+        *p_res = temp % 16;
+        printf("\n*p_res = %u", *p_res);
+        carry = temp / 16;
+        printf("\ncarry = %u", carry);
 
         num1++;
-        res++;
+        p_res++;
         }
+
+        return res;
     }
+
 }
 
-void multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
+unsigned int* multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
-    unsigned int iterator_1, iterator_2, temp, temp_res[MAX_int*2], *p_temp_res, *p_res, *p_num1, *p_num2;
-    p_temp_res = temp_res;
-    p_num1 = num1;
-    p_num2 = num2;
+    unsigned int iterator_1, iterator_2, temp, *p_num1, *p_num2;
+    static unsigned int res[MAX*2], *p_res;
     p_res = res;
 
     for (iterator_1 = 0; iterator_1 < length*2; iterator_1++)
@@ -361,4 +383,65 @@ void multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int 
             *p_res = *p_res + temp;
         }
     }
+
+    return res;
+}
+
+void division_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length)
+{   
+    unsigned int iterator_1, iterator_2, iterator_3, remainder[MAX], *p_remainder, quotient[MAX], *p_quotient, temp, remainder_length, b_length;
+    p_remainder = remainder;
+    for (iterator_1 = 0; iterator_1 < length; iterator_1++) // remainder = A (num1)
+    {   *p_remainder = *num1;
+        p_remainder++;
+        num1++;
+    }
+    remainder_length = length;
+    p_quotient = quotient;
+    *p_quotient = 0;
+
+    for (iterator_1 = 0; iterator_1 < length; iterator_1++)
+    {
+        if ((remainder_length = length && (comparison_of_two(p_remainder, num2, length) == 0 || comparison_of_two(p_remainder, num2, length) == 1)) || remainder_length > length)
+        {
+            temp = remainder_length;
+            b_length = length - (temp - b_length);
+            for (iterator_2 = 0; iterator_2 < b_length; iterator_2++) // shift of B (num2) to the left for (temp - length) positions
+            {
+                *res = *num2;
+                res++;
+                num2++;
+            }
+            res -= length;
+            num2 -= length;
+
+            if ((remainder_length = length && comparison_of_two(p_remainder, num2, length) == -1) || remainder_length > length )
+            {
+                temp = temp - 1;
+                b_length = length - (temp - b_length);
+                for (iterator_2 = 0; iterator_2 < b_length; iterator_2++) // shift of B (num2) to the left for (temp - length) positions
+                {
+                    *res = *num2;
+                    res++;
+                    num2++;
+                }
+            }
+
+            //subtraction_of_two(p_remainder, res, p_remainder, remainder_length);
+            *p_quotient = *p_quotient; //insert a bit - ?
+        }
+    }
+
+
+}
+
+void barrett_reduction(unsigned int *num, unsigned int *module, unsigned int length_of_num, unsigned int length_of_mod)
+{
+    unsigned int iterator, q, meow = 1, beta_power, *p_len_of_mod;
+    //pre-calculation: 
+    beta_power = (2*length_of_mod);
+    meow = floor((pow(16, beta_power))/(*module));
+    printf("\npow() meow = %u", meow);
+
+    
 }
