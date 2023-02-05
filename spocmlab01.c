@@ -8,7 +8,7 @@
 int main(void)
 {
     unsigned int number_1[MAX/8], number_2[MAX], number_3[MAX], result_add[MAX+1], result_sub[MAX], result_mul[MAX*2], *p_number_1, *p_number_2, *p_number_3, *p_result_add, *p_result_sub, *p_result_mul;
-    char hex_num_3[MAX], hex_result_add[MAX+1], hex_result_sub[MAX], hex_result_mul[MAX*2], *p_hex_num_1, *p_hex_num_2, *p_hex_num_3, *p_hex_result_add, *p_hex_result_sub, *p_hex_result_mul;
+    char hex_num_3[MAX+1], hex_result_add[MAX+1], hex_result_sub[MAX], hex_result_mul[MAX*2], *p_hex_num_1, *p_hex_num_2, *p_hex_num_3, *p_hex_result_add, *p_hex_result_sub, *p_hex_result_mul;
     p_hex_num_3 = hex_num_3;
     p_number_1 = number_1;
     p_number_2 = number_2;
@@ -26,12 +26,21 @@ int main(void)
     double execution_time;
     start = clock();
     p_number_1 = hex_to_int_conversion(p_hex_num_1, MAX/8);
+    unsigned int *temp;
+    temp = p_number_1;
     puts("");
     for (int i = 0; i < MAX/8; i++)
     {
         printf("%u ", *p_number_1++);
     }
-    //hex_to_int_conversion(p_hex_num_2, p_number_2, MAX);
+
+    p_number_1 = temp;
+    p_hex_num_3 = int_to_hex_conversion(p_number_1, MAX/8);
+    puts("");
+    for (int i = 0; i < MAX+1; i++)
+    {
+        printf("%c", *p_hex_num_3++);
+    }
 
 
     end = clock();
@@ -40,3 +49,14 @@ int main(void)
     system("PAUSE");
     return 0;
 }
+
+
+/* 
+for (i = 0; i < 8; i++)
+{
+    *h_s = *num % 16;
+    *num = *num / 16;
+    h_s++;
+    num++;
+}
+ */

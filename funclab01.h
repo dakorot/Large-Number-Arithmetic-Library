@@ -4,7 +4,7 @@
 #define MAX 256
 
 unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int length);
-void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length);
+char* int_to_hex_conversion(unsigned int *dec_symbs, unsigned int length);
 unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 unsigned int* subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
@@ -149,103 +149,118 @@ unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int length)
     return dec_symbs;
 }
 
-void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length)
+char* int_to_hex_conversion(unsigned int *dec_symbs, unsigned int length)
 {
-    unsigned int iterator;
+    unsigned int iterator, remainder, count = 0;
+    static unsigned char hex_symbs[MAX+1], *p_hex_symbs;
+    p_hex_symbs = hex_symbs + MAX;
     
-    for (iterator = 0; iterator < (length + 1); iterator++)
+    for (iterator = 0; iterator < length; iterator++)
     {
-        if ((iterator == length) && (*dec_symbs == 0))
+        if (iterator == length)
             break;
-        switch (*dec_symbs)
+        while (*dec_symbs != 0)
         {
-            case 0:
-            {
-                *hex_symbs = '0';
-                break;                
-            }
-            case 1:
-            {
-                *hex_symbs = '1';
-                break;                
-            }
-            case 2:
-            {
-                *hex_symbs = '2';
-                break;                
-            }
-            case 3:
-            {
-                *hex_symbs = '3';
-                break;                
-            }
-            case 4:
-            {
-                *hex_symbs = '4';
-                break;                
-            }
-            case 5:
-            {
-                *hex_symbs = '5';
-                break;                
-            }
-            case 6:
-            {
-                *hex_symbs = '6';
-                break;                
-            }
-            case 7:
-            {
-                *hex_symbs = '7';
-                break;                
-            }
-            case 8:
-            {
-                *hex_symbs = '8';
-                break;                
-            }
-            case 9:
-            {
-                *hex_symbs = '9';
-                break;                
-            }
-            case 10:
-            {
-                *hex_symbs = 'A';
-                break;
-            }
-            case 11:
-            {
-                *hex_symbs = 'B';
-                break;
-            }
-            case 12:
-            {
-                *hex_symbs = 'C';
-                break;
-            }
-            case 13:
-            {
-                *hex_symbs = 'D';
-                break;
-            }
-            case 14:
-            {
-                *hex_symbs = 'E';
-                break;
-            }
-            case 15:
-            {
-                *hex_symbs = 'F';
-                break;
-            }
-            default:
-                break;
-        }
+            printf("\n*dec_symbs = %u", *dec_symbs);
+            remainder = *dec_symbs % 16;
+            *dec_symbs = (*dec_symbs) / 16;
+            printf("\nremainder = *dec_symbs %% 16 = %u %% 16 = %u", *dec_symbs, remainder);
+            printf("\n*dec_symbs = %u", *dec_symbs);
 
+            switch (remainder)
+            {
+                case 0:
+                {
+                    *p_hex_symbs = '0';
+                    break;                
+                }
+                case 1:
+                {
+                    *p_hex_symbs = '1';
+                    break;                
+                }
+                case 2:
+                {
+                    *p_hex_symbs = '2';
+                    break;                
+                }
+                case 3:
+                {
+                    *p_hex_symbs = '3';
+                    break;                
+                }
+                case 4:
+                {
+                    *p_hex_symbs = '4';
+                    break;                
+                }
+                case 5:
+                {
+                    *p_hex_symbs = '5';
+                    break;                
+                }
+                case 6:
+                {
+                    *p_hex_symbs = '6';
+                    break;                
+                }
+                case 7:
+                {
+                    *p_hex_symbs = '7';
+                    break;                
+                }
+                case 8:
+                {
+                    *p_hex_symbs = '8';
+                    break;                
+                }
+                case 9:
+                {
+                    *p_hex_symbs = '9';
+                    break;                
+                }
+                case 10:
+                {
+                    *p_hex_symbs = 'A';
+                    break;
+                }
+                case 11:
+                {
+                    *p_hex_symbs = 'B';
+                    break;
+                }
+                case 12:
+                {
+                    *p_hex_symbs = 'C';
+                    break;
+                }
+                case 13:
+                {
+                    *p_hex_symbs = 'D';
+                    break;
+                }
+                case 14:
+                {
+                    *p_hex_symbs = 'E';
+                    break;
+                }
+                case 15:
+                {
+                    *p_hex_symbs = 'F';
+                    break;
+                }
+                default:
+                    break;
+            }
+            printf("\nIteration #%u: p_hex_symbs = %u.", count, p_hex_symbs);
+            count++;
+            p_hex_symbs--;
+        }
+        printf("\n===ITERATION=== #%u: p_hex_symbs = %u.==============", iterator, dec_symbs);
         dec_symbs++;
-        hex_symbs--;
     }
+
+    return hex_symbs;
 }
 
 unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
