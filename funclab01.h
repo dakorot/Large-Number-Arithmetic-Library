@@ -3,7 +3,7 @@
 
 #define MAX 256
 
-void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length);
+unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int length);
 void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length);
 unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
@@ -13,131 +13,140 @@ unsigned int* multiplication_of_two(unsigned int *num1, unsigned int *num2, unsi
 void division_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
 void barrett_reduction(unsigned int *num, unsigned int *module, unsigned int length_of_num, unsigned int length_of_mod);
 
-void hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length)
+unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int length)
 {
-    unsigned int iterator;
+    unsigned int iterator_1, iterator_2;
+    static unsigned int dec_symbs[MAX/8], *p_dec_symbs;
+    p_dec_symbs = dec_symbs;
 
-    for (iterator = 0; iterator < length; iterator++)
+    for (iterator_1 = 0; iterator_1 < length; iterator_1++)
     {
-        switch (*hex_symbs)
+        *p_dec_symbs = 0;
+        for (iterator_2 = 0; iterator_2 < 8; iterator_2++)
         {
-            case '0':
+            switch (*hex_symbs)
             {
-                *dec_symbs = 0;
-                break;                
+                case '0':
+                {
+                    *p_dec_symbs += 0 * pow(16, iterator_2);
+                    break;                
+                }
+                case '1':
+                {
+                    *p_dec_symbs += 1 * pow(16, iterator_2);
+                    break;                
+                }
+                case '2':
+                {
+                    *p_dec_symbs += 2 * pow(16, iterator_2);
+                    break;                
+                }
+                case '3':
+                {
+                    *p_dec_symbs += 3 * pow(16, iterator_2);
+                    break;                
+                }
+                case '4':
+                {
+                    *p_dec_symbs += 4 * pow(16, iterator_2);
+                    break;                
+                }
+                case '5':
+                {
+                    *p_dec_symbs += 5 * pow(16, iterator_2);
+                    break;                
+                }
+                case '6':
+                {
+                    *p_dec_symbs += 6 * pow(16, iterator_2);
+                    break;                
+                }
+                case '7':
+                {
+                    *p_dec_symbs += 7 * pow(16, iterator_2);
+                    break;                
+                }
+                case '8':
+                {
+                    *p_dec_symbs += 8 * pow(16, iterator_2);
+                    break;                
+                }
+                case '9':
+                {
+                    *p_dec_symbs += 9 * pow(16, iterator_2);
+                    break;                
+                }
+                case 'a':
+                {
+                    *p_dec_symbs += 10 * pow(16, iterator_2);
+                    break;
+                }
+                case 'A':
+                {
+                    *p_dec_symbs += 10 * pow(16, iterator_2);
+                    break;                
+                }
+                case 'b':
+                {
+                    *p_dec_symbs += 11 * pow(16, iterator_2);
+                    break;
+                }
+                case 'B':
+                {
+                    *p_dec_symbs += 11 * pow(16, iterator_2);
+                    break;                
+                }
+                case 'c':
+                {
+                    *p_dec_symbs += 12 * pow(16, iterator_2);
+                    break;
+                }
+                case 'C':
+                {
+                    *p_dec_symbs += 12 * pow(16, iterator_2);
+                    break;                
+                }
+                case 'd':
+                {
+                    *p_dec_symbs += 13 * pow(16, iterator_2);
+                    break;
+                }
+                case 'D':
+                {
+                    *p_dec_symbs += 13 * pow(16, iterator_2);
+                    break;                
+                }
+                case 'e':
+                {
+                    *p_dec_symbs += 14 * pow(16, iterator_2);
+                    break;
+                }
+                case 'E':
+                {
+                    *p_dec_symbs += 14 * pow(16, iterator_2);
+                    break;                
+                }
+                case 'f':
+                {
+                    *p_dec_symbs += 15 * pow(16, iterator_2);
+                    break;
+                }
+                case 'F':
+                {
+                    *p_dec_symbs += 15 * pow(16, iterator_2);
+                    break;                
+                }
+                default:
+                    break;
             }
-            case '1':
-            {
-                *dec_symbs = 1;
-                break;                
-            }
-            case '2':
-            {
-                *dec_symbs = 2;
-                break;                
-            }
-            case '3':
-            {
-                *dec_symbs = 3;
-                break;                
-            }
-            case '4':
-            {
-                *dec_symbs = 4;
-                break;                
-            }
-            case '5':
-            {
-                *dec_symbs = 5;
-                break;                
-            }
-            case '6':
-            {
-                *dec_symbs = 6;
-                break;                
-            }
-            case '7':
-            {
-                *dec_symbs = 7;
-                break;                
-            }
-            case '8':
-            {
-                *dec_symbs = 8;
-                break;                
-            }
-            case '9':
-            {
-                *dec_symbs = 9;
-                break;                
-            }
-            case 'a':
-            {
-                *dec_symbs = 10;
-                break;
-            }
-            case 'A':
-            {
-                *dec_symbs = 10;
-                break;                
-            }
-            case 'b':
-            {
-                *dec_symbs = 11;
-                break;
-            }
-            case 'B':
-            {
-                *dec_symbs = 11;
-                break;                
-            }
-            case 'c':
-            {
-                *dec_symbs = 12;
-                break;
-            }
-            case 'C':
-            {
-                *dec_symbs = 12;
-                break;                
-            }
-            case 'd':
-            {
-                *dec_symbs = 13;
-                break;
-            }
-            case 'D':
-            {
-                *dec_symbs = 13;
-                break;                
-            }
-            case 'e':
-            {
-                *dec_symbs = 14;
-                break;
-            }
-            case 'E':
-            {
-                *dec_symbs = 14;
-                break;                
-            }
-            case 'f':
-            {
-                *dec_symbs = 15;
-                break;
-            }
-            case 'F':
-            {
-                *dec_symbs = 15;
-                break;                
-            }
-            default:
-                break;
+
+            hex_symbs--;
         }
 
-        hex_symbs--;
-        dec_symbs++;
+        p_dec_symbs++;
     }
+
+    return dec_symbs;
 }
 
 void int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length)
@@ -336,19 +345,16 @@ unsigned int* multiplication_by_digit(unsigned int *num1, int *digit, unsigned i
         }
         else
         {
-        temp = (*num1) * (*digit) + carry;
-        *p_res = temp % 16;
-        printf("\n*p_res = %u", *p_res);
-        carry = temp / 16;
-        printf("\ncarry = %u", carry);
+            temp = (*num1) * (*digit) + carry;
+            *p_res = temp % 16;
+            carry = temp / 16;
 
-        num1++;
-        p_res++;
+            num1++;
+            p_res++;
         }
-
-        return res;
     }
 
+    return res;
 }
 
 unsigned int* multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
@@ -445,3 +451,4 @@ void barrett_reduction(unsigned int *num, unsigned int *module, unsigned int len
 
     
 }
+

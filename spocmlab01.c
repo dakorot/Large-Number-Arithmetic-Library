@@ -7,7 +7,7 @@
 
 int main(void)
 {
-    unsigned int number_1[MAX], number_2[MAX], number_3[MAX], result_add[MAX+1], result_sub[MAX], result_mul[MAX*2], *p_number_1, *p_number_2, *p_number_3, *p_result_add, *p_result_sub, *p_result_mul;
+    unsigned int number_1[MAX/8], number_2[MAX], number_3[MAX], result_add[MAX+1], result_sub[MAX], result_mul[MAX*2], *p_number_1, *p_number_2, *p_number_3, *p_result_add, *p_result_sub, *p_result_mul;
     char hex_num_3[MAX], hex_result_add[MAX+1], hex_result_sub[MAX], hex_result_mul[MAX*2], *p_hex_num_1, *p_hex_num_2, *p_hex_num_3, *p_hex_result_add, *p_hex_result_sub, *p_hex_result_mul;
     p_hex_num_3 = hex_num_3;
     p_number_1 = number_1;
@@ -25,23 +25,14 @@ int main(void)
     clock_t start, end;
     double execution_time;
     start = clock();
-    hex_to_int_conversion(p_hex_num_1, p_number_1, MAX);
+    p_number_1 = hex_to_int_conversion(p_hex_num_1, MAX/8);
+    puts("");
+    for (int i = 0; i < MAX/8; i++)
+    {
+        printf("%u ", *p_number_1++);
+    }
     //hex_to_int_conversion(p_hex_num_2, p_number_2, MAX);
 
-    //====step 3.1: multiplication (a * digit)
-    p_number_1 = number_1;
-    unsigned int digit = 2, *p_digit;
-    p_digit = &digit;
-    p_hex_result_mul = hex_result_mul + MAX*2 - 1;
-    int_to_hex_conversion(multiplication_by_digit(p_number_1, p_digit, MAX), p_hex_result_mul, MAX*2);
-    p_hex_result_mul = hex_result_mul;
-    int j;
-    puts("\n\nResult of multiplication in hex form:\n");
-    for(j = 0; j < MAX*2; j++)
-    { 
-        printf("%c", *p_hex_result_mul++);
-    }
-    puts("\n");
 
     end = clock();
     execution_time = ((double)(end - start))/CLOCKS_PER_SEC;
