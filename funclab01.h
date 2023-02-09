@@ -1,10 +1,11 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <math.h>
 
 #define MAX 256
 
-unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int length);
-char* int_to_hex_conversion(unsigned int *dec_symbs, unsigned int length);
+unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length);
+char* int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length);
 unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 unsigned int* subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
@@ -13,10 +14,9 @@ unsigned int* multiplication_of_two(unsigned int *num1, unsigned int *num2, unsi
 void division_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
 void barrett_reduction(unsigned int *num, unsigned int *module, unsigned int length_of_num, unsigned int length_of_mod);
 
-unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int length)
+unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length)
 {
-    unsigned int iterator_1, iterator_2;
-    static unsigned int dec_symbs[MAX/8], *p_dec_symbs;
+    unsigned int iterator_1, iterator_2, *p_dec_symbs;
     p_dec_symbs = dec_symbs;
 
     for (iterator_1 = 0; iterator_1 < length; iterator_1++)
@@ -149,24 +149,22 @@ unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int length)
     return dec_symbs;
 }
 
-char* int_to_hex_conversion(unsigned int *dec_symbs, unsigned int length)
+char* int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length)
 {
-    unsigned int iterator, remainder, count = 0;
-    static unsigned char hex_symbs[MAX+1], *p_hex_symbs;
-    p_hex_symbs = hex_symbs + MAX;
+    unsigned int iterator, remainder;
+    char *p_hex_symbs;
+    p_hex_symbs = hex_symbs + MAX - 1;
     
     for (iterator = 0; iterator < length; iterator++)
     {
-        if (iterator == length)
-            break;
         while (*dec_symbs != 0)
         {
             printf("\n*dec_symbs = %u", *dec_symbs);
-            remainder = *dec_symbs % 16;
-            *dec_symbs = (*dec_symbs) / 16;
-            printf("\nremainder = *dec_symbs %% 16 = %u %% 16 = %u", *dec_symbs, remainder);
-            printf("\n*dec_symbs = %u", *dec_symbs);
-
+            remainder = *dec_symbs & 15;
+            printf("\nremainder = %u", remainder);
+            *dec_symbs = (*dec_symbs) >> 4;
+            printf("\nnext *dec_symbs = %u", *dec_symbs);
+        
             switch (remainder)
             {
                 case 0:
@@ -247,16 +245,16 @@ char* int_to_hex_conversion(unsigned int *dec_symbs, unsigned int length)
                 case 15:
                 {
                     *p_hex_symbs = 'F';
+                    
                     break;
                 }
                 default:
                     break;
             }
-            printf("\nIteration #%u: p_hex_symbs = %u.", count, p_hex_symbs);
-            count++;
+            
             p_hex_symbs--;
         }
-        printf("\n===ITERATION=== #%u: p_hex_symbs = %u.==============", iterator, dec_symbs);
+        
         dec_symbs++;
     }
 
@@ -265,26 +263,27 @@ char* int_to_hex_conversion(unsigned int *dec_symbs, unsigned int length)
 
 unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
-    unsigned int iterator = 0, carry = 0;
-    static unsigned int res[MAX], *p_res;
+    unsigned int iterator, carry = 0;
+    unsigned long long int temp;
+    static unsigned int res[MAX/8], *p_res;
     p_res = res;
 
-    for (iterator = 0; iterator < (length + 1); iterator++)
+    for (iterator = 0; iterator < length; iterator++)
     {
-        if (iterator == length)
+        if ((iterator == length) && (carry != 0))
         {
             *p_res = carry;
-            break;
         }
-        else
-        {
-            *p_res = (*num1 + *num2 + carry) % 16;
-            carry = ((*num1 + *num2 + carry) >= 16); 
-        }
-
+        uint64_t temp = (uint64_t) *num1 + (uint64_t) *num2 + carry;
+        printf("\ntemp = %u + %u + %u = %llu", *num1, *num2, carry, temp);
+        *p_res = (uint64_t) temp & 0xffffffff;
+        printf("\n*p_res = (%llu & 0xffffffff) = %u", temp, *p_res);
+        carry = (uint64_t) temp >> 32;
+        printf("\ncarry = %llu >> 32 = %u", temp, carry);
+        printf("\n*p_res on this round was: %u", *p_res);
+        p_res++;
         num1++;
         num2++;
-        p_res++;
     }
 
     return res;
@@ -462,8 +461,6 @@ void barrett_reduction(unsigned int *num, unsigned int *module, unsigned int len
     //pre-calculation: 
     beta_power = (2*length_of_mod);
     meow = floor((pow(16, beta_power))/(*module));
-    printf("\npow() meow = %u", meow);
-
-    
+    printf("\npow() meow = %u", meow);    
 }
 
