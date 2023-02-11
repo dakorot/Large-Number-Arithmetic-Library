@@ -5,11 +5,11 @@
 #define MAX 256
 
 unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, unsigned int length);
-char* int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length);
+char* int_to_hex_conversion(unsigned int *dec_symbs, unsigned int length);
 unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 unsigned int* subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
-unsigned int* multiplication_by_digit(unsigned int *num1, int *num3, unsigned int length);
+unsigned int* multiplication_by_digit(unsigned int *num1, unsigned int *num3, unsigned int length);
 unsigned int* multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 void division_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
 void barrett_reduction(unsigned int *num, unsigned int *module, unsigned int length_of_num, unsigned int length_of_mod);
@@ -149,109 +149,21 @@ unsigned int* hex_to_int_conversion(char *hex_symbs, unsigned int *dec_symbs, un
     return dec_symbs;
 }
 
-char* int_to_hex_conversion(unsigned int *dec_symbs, char *hex_symbs, unsigned int length)
+char* int_to_hex_conversion(unsigned int *dec_symbs, unsigned int length)
 {
-    unsigned int iterator, remainder;
-    char *p_hex_symbs;
-    p_hex_symbs = hex_symbs + MAX - 1;
+    unsigned int iterator_1, iterator_2, remainder;
+    static char hex_symbs[MAX+1], *p_hex_symbs;
+    p_hex_symbs = hex_symbs + MAX;
     
-    for (iterator = 0; iterator < length; iterator++)
+    for (iterator_1 = 0; iterator_1 < length; iterator_1++)
     {
-        while (*dec_symbs != 0)
+        for (iterator_2 = 0; iterator_2 < 8; iterator_2++)
         {
-            printf("\n*dec_symbs = %u", *dec_symbs);
             remainder = *dec_symbs & 15;
-            printf("\nremainder = %u", remainder);
+            printf("\n*p_hex_symbs before sprintf: %c", *p_hex_symbs);
+            sprintf(p_hex_symbs, "%X", remainder);
+            printf("\n*p_hex_symbs = %c", *p_hex_symbs);
             *dec_symbs = (*dec_symbs) >> 4;
-            printf("\nnext *dec_symbs = %u", *dec_symbs);
-        
-            switch (remainder)
-            {
-                case 0:
-                {
-                    *p_hex_symbs = '0';
-                    break;                
-                }
-                case 1:
-                {
-                    *p_hex_symbs = '1';
-                    break;                
-                }
-                case 2:
-                {
-                    *p_hex_symbs = '2';
-                    break;                
-                }
-                case 3:
-                {
-                    *p_hex_symbs = '3';
-                    break;                
-                }
-                case 4:
-                {
-                    *p_hex_symbs = '4';
-                    break;                
-                }
-                case 5:
-                {
-                    *p_hex_symbs = '5';
-                    break;                
-                }
-                case 6:
-                {
-                    *p_hex_symbs = '6';
-                    break;                
-                }
-                case 7:
-                {
-                    *p_hex_symbs = '7';
-                    break;                
-                }
-                case 8:
-                {
-                    *p_hex_symbs = '8';
-                    break;                
-                }
-                case 9:
-                {
-                    *p_hex_symbs = '9';
-                    break;                
-                }
-                case 10:
-                {
-                    *p_hex_symbs = 'A';
-                    break;
-                }
-                case 11:
-                {
-                    *p_hex_symbs = 'B';
-                    break;
-                }
-                case 12:
-                {
-                    *p_hex_symbs = 'C';
-                    break;
-                }
-                case 13:
-                {
-                    *p_hex_symbs = 'D';
-                    break;
-                }
-                case 14:
-                {
-                    *p_hex_symbs = 'E';
-                    break;
-                }
-                case 15:
-                {
-                    *p_hex_symbs = 'F';
-                    
-                    break;
-                }
-                default:
-                    break;
-            }
-            
             p_hex_symbs--;
         }
         
@@ -265,15 +177,11 @@ unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned i
 {
     unsigned int iterator, carry = 0;
     unsigned long long int temp;
-    static unsigned int res[MAX/8], *p_res;
+    static unsigned int res[MAX/8+1], *p_res;
     p_res = res;
 
     for (iterator = 0; iterator < length; iterator++)
     {
-        if ((iterator == length) && (carry != 0))
-        {
-            *p_res = carry;
-        }
         uint64_t temp = (uint64_t) *num1 + (uint64_t) *num2 + carry;
         printf("\ntemp = %u + %u + %u = %llu", *num1, *num2, carry, temp);
         *p_res = (uint64_t) temp & 0xffffffff;
@@ -285,39 +193,30 @@ unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned i
         num1++;
         num2++;
     }
+    *p_res = carry;
 
     return res;
 }
 
 unsigned int* subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
-    unsigned int iterator = 0;
-    static unsigned int res[MAX], *p_res;
+    unsigned int iterator = 0, borrow = 0;
+    int temp;
+    static unsigned int res[MAX/8], *p_res;
     p_res = res;
-    int borrow = 0, temp;
 
     for (iterator = 0; iterator < length; iterator++)
     {
-        if (iterator == length)
+        temp = *num1 - *num2 - borrow;
+        if (temp >= 0)
         {
-            //*p_res = temp; 
-            break;
-        }  
-                
+            *p_res = temp;
+            borrow = 0;
+        }
         else
         {
-            temp = (*num1 - *num2 - borrow);
-            if (temp >= 0)
-            {
-               *p_res = temp;
-               borrow = 0;
-
-            }
-            else
-            {
-                *p_res = temp + 16;
-                borrow = 1;
-            }
+            *p_res = 0x100000000 + temp;
+            borrow = 1;
         }
         num1++;
         num2++;
@@ -330,7 +229,7 @@ unsigned int* subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigne
 int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
     unsigned int iterator;
-    for (iterator = length; iterator > 0; iterator++)
+    for (iterator = length; iterator > 0; iterator--)
     {
         if (iterator == -1) //numbers are equal
             return 0;
@@ -345,63 +244,46 @@ int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int lengt
     }
 }
 
-unsigned int* multiplication_by_digit(unsigned int *num1, int *digit, unsigned int length)
+unsigned int* multiplication_by_digit(unsigned int *num1, unsigned int *digit, unsigned int length)
 {
-    unsigned int iterator, carry = 0, temp;
-    static unsigned int res[MAX*2], *p_res;
+    unsigned int iterator, carry = 0;
+    unsigned long long int temp;
+    static unsigned int res[MAX/4], *p_res;
     p_res = res;
+
     for (iterator = 0; iterator < length; iterator++)
     {
-        if (iterator == length)
-        {
-            *p_res = carry;
-            break;
-        }
-        else
-        {
-            temp = (*num1) * (*digit) + carry;
-            *p_res = temp % 16;
-            carry = temp / 16;
-
-            num1++;
-            p_res++;
-        }
+        uint64_t temp = (uint64_t) (*num1) * (*digit) + carry;
+        printf("\ntemp = %u * %u + %u = %llu", *num1, *digit, carry, temp);
+        *p_res = (uint64_t) temp & 0xffffffff;
+        carry = (uint64_t) temp >> 32;
+        printf("\ncarry = %llu >> 32 = %u", temp, carry);
+        printf("\n*p_res on this round was: %u", *p_res);
+        num1++;
+        p_res++;
     }
+    *p_res = carry;
 
     return res;
 }
 
 unsigned int* multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
-    unsigned int iterator_1, iterator_2, temp, *p_num1, *p_num2;
-    static unsigned int res[MAX*2], *p_res;
+    unsigned int iterator_1, iterator_2;
+    unsigned long long int temp;
+    static unsigned int res[MAX/4], *p_res;
     p_res = res;
 
-    for (iterator_1 = 0; iterator_1 < length*2; iterator_1++)
+    /* for (iterator_1 = 0; iterator_1 < length*2; iterator_1++)
     {
         *p_res = 0;
         p_res++;
     }
-    p_res = res;
+    p_res = res; */
 
     for (iterator_2 = 0; iterator_2 < length; iterator_2++)
     {
-        for (iterator_1 = 0; iterator_1 < length; iterator_1++)
-        {
-            p_res = res + iterator_1 + iterator_2;
-            p_num1 = num1 + iterator_1;
-            p_num2 = num2 + iterator_2;
-            *p_res = *p_res + (*p_num1) * (*p_num2);
-        }
-        
-        p_res = res;
-        for (iterator_1 = 0; iterator_1 < length*2; iterator_1++)
-        {
-            temp = *p_res / 16;
-            *p_res = *p_res % 16;
-            p_res = p_res + 1;
-            *p_res = *p_res + temp;
-        }
+        uint64_t temp = *(multiplication_by_digit(num1, num2, length));    
     }
 
     return res;

@@ -7,7 +7,7 @@
 
 int main(void)
 {
-    unsigned int number_1[MAX/8], number_2[MAX], number_3[MAX], result_add[MAX+1], result_sub[MAX], result_mul[MAX*2], *p_number_1, *p_number_2, *p_number_3, *p_result_add, *p_result_sub, *p_result_mul;
+    unsigned int number_1[MAX/8], number_2[MAX], number_3[MAX], result_add[MAX/8+1], result_sub[MAX], result_mul[MAX*2], *p_number_1, *p_number_2, *p_number_3, *p_result_add, *p_result_sub, *p_result_mul;
     char hex_num_3[MAX+1], hex_result_add[MAX+1], hex_result_sub[MAX], hex_result_mul[MAX*2], *p_hex_num_1, *p_hex_num_2, *p_hex_num_3, *p_hex_result_add, *p_hex_result_sub, *p_hex_result_mul;
     p_hex_num_3 = hex_num_3;
     p_number_1 = number_1;
@@ -18,9 +18,9 @@ int main(void)
     p_result_mul = result_mul;
     p_hex_result_add = hex_result_add;
   
-    char hex_num_1[MAX] = "87D6D58D3991D536544389CEFA72FD0EBED75B2EBDC2C79BC3717793108F0952011E7E2D7040FFFB32F10BEB8ED0A485026B6860020B230128A8222B0525A6888942FB01C537800BF25D6F021D4B99D3CBD6DF9055FA22F91A6CFC4FDFC408AEF78F6418D3CE4E20EC7888B61BAE3D73C27C257CCA905DE0353C3A7CFFD9FE15";
+    char hex_num_1[MAX] = "D4D2110984907B5625309D956521BAB4157B8B1ECE04043249A3D379AC112E5B9AF44E721E148D88A942744CF56A06B92D28A0DB950FE4CED2B41A0BD38BCE7D0BE1055CF5DE38F2A588C2C9A79A75011058C320A7B661C6CE1C36C7D870758307E5D2CF07D9B6E8D529779B6B2910DD17B6766A7EFEE215A98CAC300F2827DB";
     p_hex_num_1 = hex_num_1 + MAX - 1;
-    char hex_num_2[MAX] = "791EDB102DA183759979CEF70E1405AF14B98CD44357EADF6A8E35E49F99BB56CBD3F68897D6E05502ED1DE14EC46D04F96992C2D129737987E84E62371648B37633794016852A8CBFFCFDE06B17EC216AE8914D59E677A15A90361A594F0D1524A41AE63C59D343D4E522646722B0292DD7C85571AC9A84FDA6CD2D8DE307F6";
+    char hex_num_2[MAX] = "3A7EF2554E8940FA9B93B2A5E822CC7BB262F4A14159E4318CAE3ABF5AEB1022EC6D01DEFAB48B528868679D649B445A753684C13F6C3ADBAB059D635A2882090FC166EA9F0AAACD16A062149E4A0952F7FAAB14A0E9D3CB0BE9200DBD3B0342496421826919148E617AF1DB66978B1FCD28F8408506B79979CCBCC7F7E5FDE7";
     p_hex_num_2 = hex_num_2 + MAX - 1;
 
     clock_t start, end;
@@ -43,20 +43,15 @@ int main(void)
     //Step 2: addition
     p_number_1 = number_1;
     p_number_2 = number_2;
-    unsigned int *temp;
-    temp = addition_of_two(p_number_1, p_number_2, MAX/8);
-    p_result_add = temp;
+    unsigned int digit = 2, *p_digit;
+    p_digit = &digit;
+    p_result_add = addition_of_two(p_number_1, p_digit, MAX/8);
     puts("");
-    for (int i = 0; i < MAX; i++)
-    {
-        printf("%c", *p_result_add++);
-    }
-    p_result_add = temp;
-    p_hex_result_add = int_to_hex_conversion(p_result_add, hex_result_add, MAX/8);
+    p_hex_result_add = int_to_hex_conversion(p_result_add, MAX/8+1);
 
     //Step 3: Output
     puts("");
-    for (int i = 0; i < MAX; i++)
+    for (int i = 0; i < MAX+1; i++)
     {
         printf("%c", *p_hex_result_add++);
     }
