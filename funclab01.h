@@ -10,6 +10,7 @@ unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned i
 int comparison_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 unsigned int* subtraction_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 unsigned int* multiplication_by_digit(unsigned int *num1, unsigned int *num3, unsigned int length);
+unsigned int* long_shift_to_high(unsigned int *temp_num, unsigned int i);
 unsigned int* multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int length);
 void division_of_two(unsigned int *num1, unsigned int *num2, unsigned int *res, unsigned int length);
 void barrett_reduction(unsigned int *num, unsigned int *module, unsigned int length_of_num, unsigned int length_of_mod);
@@ -153,18 +154,16 @@ char* int_to_hex_conversion(unsigned int *dec_symbs, unsigned int length)
 {
     unsigned int iterator_1, iterator_2, remainder;
     static char hex_symbs[MAX+1], *p_hex_symbs;
-    p_hex_symbs = hex_symbs + MAX;
+    p_hex_symbs = hex_symbs;
     
     for (iterator_1 = 0; iterator_1 < length; iterator_1++)
     {
         for (iterator_2 = 0; iterator_2 < 8; iterator_2++)
         {
             remainder = *dec_symbs & 15;
-            printf("\n*p_hex_symbs before sprintf: %c", *p_hex_symbs);
             sprintf(p_hex_symbs, "%X", remainder);
-            printf("\n*p_hex_symbs = %c", *p_hex_symbs);
             *dec_symbs = (*dec_symbs) >> 4;
-            p_hex_symbs--;
+            p_hex_symbs++;
         }
         
         dec_symbs++;
@@ -183,12 +182,8 @@ unsigned int* addition_of_two(unsigned int *num1, unsigned int *num2, unsigned i
     for (iterator = 0; iterator < length; iterator++)
     {
         uint64_t temp = (uint64_t) *num1 + (uint64_t) *num2 + carry;
-        printf("\ntemp = %u + %u + %u = %llu", *num1, *num2, carry, temp);
         *p_res = (uint64_t) temp & 0xffffffff;
-        printf("\n*p_res = (%llu & 0xffffffff) = %u", temp, *p_res);
         carry = (uint64_t) temp >> 32;
-        printf("\ncarry = %llu >> 32 = %u", temp, carry);
-        printf("\n*p_res on this round was: %u", *p_res);
         p_res++;
         num1++;
         num2++;
@@ -254,11 +249,8 @@ unsigned int* multiplication_by_digit(unsigned int *num1, unsigned int *digit, u
     for (iterator = 0; iterator < length; iterator++)
     {
         uint64_t temp = (uint64_t) (*num1) * (*digit) + carry;
-        printf("\ntemp = %u * %u + %u = %llu", *num1, *digit, carry, temp);
         *p_res = (uint64_t) temp & 0xffffffff;
         carry = (uint64_t) temp >> 32;
-        printf("\ncarry = %llu >> 32 = %u", temp, carry);
-        printf("\n*p_res on this round was: %u", *p_res);
         num1++;
         p_res++;
     }
@@ -267,23 +259,57 @@ unsigned int* multiplication_by_digit(unsigned int *num1, unsigned int *digit, u
     return res;
 }
 
+unsigned int* long_shift_to_high(unsigned int *temp_num, unsigned int i)
+{
+    unsigned int iterator, *p_temp_num;
+    p_temp_num = temp_num;
+
+    for (iterator = 0; iterator <= i; iterator++)
+    {
+        *p_temp_num = 0;
+        p_temp_num++;
+    }
+    
+    return p_temp_num;
+}
+
 unsigned int* multiplication_of_two(unsigned int *num1, unsigned int *num2, unsigned int length)
 {
-    unsigned int iterator_1, iterator_2;
-    unsigned long long int temp;
+    unsigned int iterator, temp[MAX/4], *p_temp;
     static unsigned int res[MAX/4], *p_res;
     p_res = res;
+    p_temp = temp;
 
-    /* for (iterator_1 = 0; iterator_1 < length*2; iterator_1++)
+    for (iterator = 0; iterator < MAX/4; iterator++)
     {
         *p_res = 0;
         p_res++;
     }
-    p_res = res; */
+    p_res = res;
 
-    for (iterator_2 = 0; iterator_2 < length; iterator_2++)
+    for (iterator = 0; iterator < length; iterator++)
     {
-        uint64_t temp = *(multiplication_by_digit(num1, num2, length));    
+        p_temp = multiplication_by_digit(num1, num2, length); 
+        printf("\nMultiplication by digit #%u:\n", iterator);
+        for (unsigned int i = 0; i < MAX/4; i++)
+        {
+            printf("%u ", *p_temp);
+            p_temp++;
+        }
+        p_temp = temp;
+        puts("");
+
+        p_res = addition_of_two(p_temp + iterator, p_res + iterator, MAX/4);
+        printf("\nAddition of temp and res #%u:\n", iterator);
+        for (unsigned int i = 0; i < MAX/4; i++)
+        {
+            printf("%u ", *p_temp);
+            p_temp++;
+        }
+        p_temp = temp;
+        puts("");
+
+        num2++;
     }
 
     return res;

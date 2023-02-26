@@ -43,9 +43,7 @@ int main(void)
     //Step 2: addition
     p_number_1 = number_1;
     p_number_2 = number_2;
-    unsigned int digit = 2, *p_digit;
-    p_digit = &digit;
-    p_result_add = addition_of_two(p_number_1, p_digit, MAX/8);
+    p_result_add = multiplication_of_two(p_number_1, p_number_2, MAX/8);
     puts("");
     p_hex_result_add = int_to_hex_conversion(p_result_add, MAX/8+1);
 

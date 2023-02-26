@@ -38,5 +38,6 @@
     "stdlib.h": "c",
     "funclab01.h": "c",
     "time.h": "c"
-  }
+  },
+  "C_Cpp_Runner.useAddressSanitizer": false
 }
